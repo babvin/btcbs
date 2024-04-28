@@ -9,7 +9,7 @@ body, html {
 form { 
     margin: 0 auto; 
     width:250px;
-    text-align: center;
+    /*text-align: center;*/
     }
 
 /* Global styles */
@@ -73,4 +73,33 @@ footer {
     padding: 20px 0;
     text-align: center;
     margin-top: auto;
+}
+
+/* styles.css */
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th,
+table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-align: left;
+}
+
+table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+table tr:hover {
+    background-color: #f2f2f2;
 }

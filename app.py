@@ -1,9 +1,9 @@
 from flask import Flask, redirect, url_for, session, render_template, request, jsonify
-from wtforms import StringField, BooleanField
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+
 from wtforms.validators import DataRequired, Regexp, Length
 from sqlalchemy_utils import UUIDType
 import uuid
@@ -14,12 +14,13 @@ import os
 import secrets
 from sqlalchemy.exc import IntegrityError
 from flask import flash, jsonify
-from wtforms import StringField, PasswordField, SubmitField, DateField, TimeField, SelectField
+from wtforms import StringField, HiddenField, PasswordField, SubmitField, DateField, TimeField, SelectField
 from wtforms.validators import DataRequired, EqualTo
 from sqlalchemy import create_engine, UniqueConstraint
 from sqlalchemy_utils import database_exists, create_database
 from wtforms_alchemy import PhoneNumberField
 from flask import session, redirect, url_for
+from datetime import date
 
 app = Flask(__name__, static_folder='assets', static_url_path="")
 app.config.update({
@@ -75,6 +76,9 @@ class Attendance(db.Model):
     user = db.Column(db.String(100), nullable=False)
     attendance_date = db.Column(db.Date, nullable=False)
     status = db.Column(db.String(10), nullable=False)
+    __table_args__ = (
+        UniqueConstraint('user', 'attendance_date', 'status', name='unique_attendance'),
+    )
     # Take 'user' session variable after successful login for the 'user' field
 
 class CourtForm(FlaskForm):
@@ -85,13 +89,13 @@ class CourtForm(FlaskForm):
 class AddBookingForm(FlaskForm):
     court_id = StringField('Court ID', validators=[DataRequired()])
     booking_date = DateField('Date', validators=[DataRequired()])
-    user = StringField('User', validators=[DataRequired()])
+    user = HiddenField('User', validators=[DataRequired()])
     start_time = TimeField('Start Time', validators=[DataRequired()])
     end_time = TimeField('End Time', validators=[DataRequired()])
     submit = SubmitField('Add Booking')
 
 class AddAttendanceForm(FlaskForm):
-    user = StringField('User', validators=[DataRequired()])
+    user = HiddenField('User', validators=[DataRequired()])
     attendance_date = DateField('Date', validators=[DataRequired()])
     status = SelectField('Status', choices=[('present', 'Present'), ('absent', 'Absent')], validators=[DataRequired()])
     submit = SubmitField('Add Attendance')
@@ -174,8 +178,8 @@ def login():
 # CRUD APIs for Courts
 @app.route('/courts', methods=['GET'])
 def get_courts():
-    courts = Court.query.all()
-    return render_template('courts.html', courts=courts)
+    court = Court.query.all()
+    return render_template('courts.html', court=court)
 
 @app.route('/courts/add', methods=['GET', 'POST'])
 def add_court():
@@ -229,8 +233,12 @@ def generate_totp_secret():
 # CREATE: Add booking route
 @app.route('/add_booking', methods=['GET', 'POST'])
 def add_booking():
-    
-    form = AddBookingForm()
+    if 'user' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
+
+    user = session['user']
+    form = AddBookingForm(user=user)
     if form.validate_on_submit():
         booking = Booking(
             court_id=form.court_id.data,
@@ -256,8 +264,8 @@ def add_booking():
 # READ: View bookings route
 @app.route('/view_bookings')
 def view_bookings():
-    bookings = Booking.query.all()
-    return render_template('view_bookings.html', bookings=bookings)
+    booking = Booking.query.all()
+    return render_template('view_bookings.html', booking=booking)
 
 # UPDATE: Edit booking route
 @app.route('/edit_booking/<int:booking_id>', methods=['GET', 'POST'])
@@ -281,16 +289,28 @@ def delete_booking(booking_id):
 # CREATE: Add attendance route
 @app.route('/add_attendance', methods=['GET', 'POST'])
 def add_attendance():
-    form = AddAttendanceForm()
+    if 'user' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
+    # Get current date
+    current_date = date.today().strftime('%Y-%m-%d')
+    user = session['user']
+    form = AddAttendanceForm(user=user)
     if form.validate_on_submit():
         attendance = Attendance(
             user=form.user.data,
             attendance_date=form.attendance_date.data,
             status=form.status.data
         )
-        db.session.add(attendance)
-        db.session.commit()
-        return redirect(url_for('view_attendance'))
+        try:
+            db.session.add(attendance)
+            db.session.commit()
+            flash('Attendance added successfully!', 'success')
+        except:
+            db.session.rollback()
+            flash('Duplicate attendance detected! Please choose a different day.', 'error')
+        redirect_url = url_for('view_attendance')    
+        return render_template('redirect.html', redirect_url=redirect_url)
     return render_template('add_attendance.html', form=form)
 
 # READ: View attendance route

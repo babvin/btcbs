@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Add Booking</h1>
+    <h1><center>Add Booking</center></h1>
     <form method="post">
         {{ form.hidden_tag() }}
         <div>
@@ -18,13 +18,13 @@
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
+        <!--<div>
             {{ form.user.label }}
             {{ form.user(class="form-control") }}
             {% for error in form.user.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
-        </div>
+        </div> -->
         <div>
             {{ form.booking_date.label }}
             {{ form.booking_date(class="form-control") }}
@@ -35,14 +35,16 @@
         
         <div>
             {{ form.start_time.label }}
-            {{ form.start_time(class="form-control") }}
+            {# Set default value to "09:00" and set minutes to 0 #}
+            {{ form.start_time(class="form-control", value="08:00", step="3600") }}
             {% for error in form.start_time.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
             {{ form.end_time.label }}
-            {{ form.end_time(class="form-control") }}
+            {# Set default value to "09:00" and set minutes to 0 #}
+            {{ form.end_time(class="form-control", value="09:00", step="3600") }}
             {% for error in form.end_time.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
@@ -56,6 +58,18 @@
             {% endif %}
             {% endwith %}
         </div>
+        <script>
+            // Ensure minutes remain at 00
+            document.getElementById("start_time").addEventListener("input", function() {
+                this.value = this.value.replace(/:[^:]*$/, ":00");
+            });
+        </script>
+        <script>
+            // Ensure minutes remain at 00
+            document.getElementById("end_time").addEventListener("input", function() {
+                this.value = this.value.replace(/:[^:]*$/, ":00");
+            });
+        </script>
         <button type="submit" class="btn btn-primary">Add Booking</button>
     </form>
 </body>

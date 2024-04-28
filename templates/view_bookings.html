@@ -1,17 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Bookings</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <h1>Bookings</h1>
-    <ul>
-        {% for booking in bookings %}
-            <li>{{ booking.id }} - {{ booking.court_id }} -{{ booking.user }} - {{ booking.booking_date }} - {{ booking.start_time }} - {{ booking.end_time }}</li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}View Booking{% endblock %}
+
+
+{% block content %}
+    <h1>List of Bookings</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User </th>
+                <th>Court ID</th>
+                <th>Bookding Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <!-- Add other table headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in booking %}
+            <tr>
+                <td>{{ record.id }}</td>
+                <td>{{ record.user }}</td>
+                <td>{{ record.court_id }}</td>
+                <td>{{ record.booking_date }}</td>
+                <td>{{ record.start_time}}</td>
+                <td>{{ record.end_time }}</td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('.add_booking') }}">Add Booking</a>
+{% endblock %}

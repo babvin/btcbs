@@ -7,19 +7,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Add Attendance</h1>
+    <h1><center>Add Attendance</center></h1>
     <form method="post">
         {{ form.hidden_tag() }}
-        <div>
+        <!--<div>
             {{ form.user.label }}
             {{ form.user(class="form-control") }}
             {% for error in form.user.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
-        </div>
+        </div>-->
         <div>
             {{ form.attendance_date.label }}
-            {{ form.attendance_date(class="form-control") }}
+            {# Set minimum date to today's date to restrict selection of past dates #}
+            {{ form.attendance_date(class="form-control", min=current_date) }}
             {% for error in form.attendance_date.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}

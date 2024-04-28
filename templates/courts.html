@@ -1,17 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Courts</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <h1>Courts</h1>
-    <ul>
-        {% for court in courts %}
-            <li>{{ court.name }} - Cost per Hour: ${{ court.cost_per_hour }}</li>
-        {% endfor %}
-    </ul>
+{% extends "base.html" %}
+
+{% block title %}Courts{% endblock %}
+
+
+{% block content %}
+<h1><center>List of Courts</center></h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Court #</th>
+                <th>Cost per Hour</th>
+                <!-- Add other table headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in court %}
+            <tr>
+                <td>{{ record.id }}</td>
+                <td>{{ record.name }}</td>
+                <td>{{ record.cost_per_hour }}</td>
+               
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     <a href="{{ url_for('.add_court') }}">Add Court</a>
-</body>
-</html>
+{% endblock %}
