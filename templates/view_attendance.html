@@ -10,7 +10,7 @@
     <h1>Attendance</h1>
     <ul>
         {% for attend in attendance %}
-            <li>{{ attend.id }} - {{ attend.user_id }} - {{ attend.date }} - {{ attend.status }}</li>
+            <li>{{ attend.id }} - {{ attend.user }} - {{ attend.attendance_date }} - {{ attend.status }}</li>
         {% endfor %}
     </ul>
 </body>

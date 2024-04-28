@@ -290,7 +290,7 @@ def add_attendance():
         )
         db.session.add(attendance)
         db.session.commit()
-        return redirect(url_for('attendance_success'))
+        return redirect(url_for('view_attendance'))
     return render_template('add_attendance.html', form=form)
 
 # READ: View attendance route
