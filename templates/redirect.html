@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirecting...</title>
+    <script type="text/javascript">
+         function showAlert() {
+            var messages = {{ get_flashed_messages(with_categories=true)|tojson }};
+            messages.forEach(function(message) {
+                alert(message[1]);
+            });
+        }
+
+        // Call the function to display the flashed messages
+        showAlert();
+
+        // Redirect after displaying the alert
+        setTimeout(function() {
+            window.location.href = "{{ redirect_url }}";
+        }, 5000); // 5000 milliseconds (5 seconds)
+    </script>
+</head>
+<body>
+    <h1>Redirecting...</h1>
+    <p>Please wait...</p>
+</body>
+</html>

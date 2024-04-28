@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Bookings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Bookings</h1>
+    <ul>
+        {% for booking in bookings %}
+            <li>{{ booking.id }} - {{ booking.court_id }} -{{ booking.user }} - {{ booking.booking_date }} - {{ booking.start_time }} - {{ booking.end_time }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

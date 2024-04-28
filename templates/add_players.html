@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Player</title>
+</head>
+<body>
+    <h1>Add Player</h1>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <p>{{ form.name.label }} {{ form.name }}</p>
+        <p>{{ form.email.label }} {{ form.email }}</p>
+        <p>{{ form.submit }}</p>
+    </form>
+</body>
+</html>

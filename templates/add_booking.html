@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Booking</title>
+  
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Add Booking</h1>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.court_id.label }}
+            {{ form.court_id(class="form-control") }}
+            {% for error in form.court_id.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.user.label }}
+            {{ form.user(class="form-control") }}
+            {% for error in form.user.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.booking_date.label }}
+            {{ form.booking_date(class="form-control") }}
+            {% for error in form.booking_date.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        
+        <div>
+            {{ form.start_time.label }}
+            {{ form.start_time(class="form-control") }}
+            {% for error in form.start_time.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.end_time.label }}
+            {{ form.end_time(class="form-control") }}
+            {% for error in form.end_time.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul class=flashes>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+        <button type="submit" class="btn btn-primary">Add Booking</button>
+    </form>
+</body>
+</html>

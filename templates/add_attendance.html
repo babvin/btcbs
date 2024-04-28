@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Attendance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Add Attendance</h1>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.user.label }}
+            {{ form.user(class="form-control") }}
+            {% for error in form.user.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.attendance_date.label }}
+            {{ form.attendance_date(class="form-control") }}
+            {% for error in form.attendance_date.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.status.label }}
+            {{ form.status(class="form-control") }}
+            {% for error in form.status.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Add Attendance</button>
+    </form>
+</body>
+</html>

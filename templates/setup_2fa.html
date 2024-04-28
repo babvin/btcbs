@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Two-Factor Authentication</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Setup Two-Factor Authentication</h1>
+    <p>Hello, {{ user.name }}!</p>
+    <p>To complete setting up two-factor authentication for your account, please scan the QR code below using the Google Authenticator app:</p>
+    <img src="{{ '/qr_codes/'+ user.mobile_number +'_qr.png' }}" alt="QR Code">
+    <p>Please login, <a href="{{ url_for('.login') }}"> here</a>.</p>
+    </form>
+</body>
+</html>

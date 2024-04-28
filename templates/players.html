@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Players</title>
+</head>
+<body>
+    <h1>Players</h1>
+    <ul>
+        {% for player in players %}
+            <li>{{ player.name }} - {{ player.email }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('.add_player') }}">Add Player</a>
+</body>
+</html>

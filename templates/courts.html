@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Courts</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Courts</h1>
+    <ul>
+        {% for court in courts %}
+            <li>{{ court.name }} - Cost per Hour: ${{ court.cost_per_hour }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('.add_court') }}">Add Court</a>
+</body>
+</html>

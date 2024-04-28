@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bookings</title>
+</head>
+<body>
+    <h1>Bookings</h1>
+    <ul>
+        {% for booking in bookings %}
+            <li>Booking ID: {{ booking.id }} - Player: {{ booking.player.name }} - Court: {{ booking.court.name }} - Date: {{ booking.booking_date }} - Time: {{ booking.start_time }} to {{ booking.end_time }}</li>
+        {% endfor %}
+    </ul>
+    <!-- Add booking form -->
+</body>
+</html>
