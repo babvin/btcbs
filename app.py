@@ -1,11 +1,7 @@
-from flask import Flask, redirect, url_for, session, render_template, request, jsonify
-
+from flask import Flask, redirect, url_for, session, render_template, request, jsonify, flash, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf import FlaskForm
-
-from wtforms.validators import DataRequired, Regexp, Length
-from sqlalchemy_utils import UUIDType
 import uuid
 from pyotp import TOTP
 import pyotp
@@ -13,19 +9,23 @@ import qrcode
 import os
 import secrets
 from sqlalchemy.exc import IntegrityError
-from flask import flash, jsonify
 from wtforms import StringField, HiddenField, PasswordField, SubmitField, DateField, TimeField, SelectField
-from wtforms.validators import DataRequired, EqualTo
+from wtforms.validators import DataRequired, EqualTo, Regexp, Length
 from sqlalchemy import create_engine, UniqueConstraint
-from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy_utils import database_exists, create_database, UUIDType
 from wtforms_alchemy import PhoneNumberField
-from flask import session, redirect, url_for
-from datetime import date
+from dotenv import load_dotenv
+from datetime import date, datetime
+import logging
 
+# Configure logging
+logging.basicConfig(filename='user_login.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+
+load_dotenv()
 app = Flask(__name__, static_folder='assets', static_url_path="")
 app.config.update({
-    'SECRET_KEY': 'your_secret_key',    
-    'SQLALCHEMY_DATABASE_URI': 'postgresql://postgres:changeme@172.19.0.2/badminton',
+    'SECRET_KEY': os.getenv('SECRET_KEY'),    
+    'SQLALCHEMY_DATABASE_URI': f"postgresql://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}@172.19.0.2/badminton",
     'SQLALCHEMY_TRACK_MODIFICATIONS': False
 })
 def validate_database():
@@ -163,6 +163,7 @@ def login():
                 session['user_id'] = user.id
                 session['user'] = user.name
                 flash('Logged in successfully!', 'success')
+                logging.info(f'User {user.name} logged in at {datetime.now()}')
                 return redirect(url_for('index'))
             else:
                 # TOTP code is invalid
@@ -215,6 +216,7 @@ def manage_court(id):
 @app.route('/logout')
 def logout():
     # Clear session variables
+    logging.info(f"User {session['user']} logged out at {datetime.now()}")
     session.clear()
     # Redirect to the login page (replace 'login' with the actual login route)
     return redirect(url_for('login'))

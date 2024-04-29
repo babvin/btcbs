@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Attendance</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Add Attendance{% endblock %}
+
+
+{% block content %}
     <h1><center>Add Attendance</center></h1>
     <form method="post">
+        <table>
         {{ form.hidden_tag() }}
         <!--<div>
             {{ form.user.label }}
@@ -18,21 +16,29 @@
             {% endfor %}
         </div>-->
         <div>
-            {{ form.attendance_date.label }}
+            <tr><th>{{ form.attendance_date.label }}</th>
             {# Set minimum date to today's date to restrict selection of past dates #}
-            {{ form.attendance_date(class="form-control", min=current_date) }}
+            <td>{{ form.attendance_date(class="form-control", min=current_date, id="attendance_date") }}</td></tr>
             {% for error in form.attendance_date.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
-            {{ form.status.label }}
-            {{ form.status(class="form-control") }}
+            <tr><th>{{ form.status.label }}</th>
+            <td>{{ form.status(class="form-control") }}</td></tr>
             {% for error in form.status.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
+    </table>
+        <script>
+            // Get the input element by its ID
+            var datePicker = document.getElementById("attendance_date");
+        
+            // Set the minimum date to today
+            datePicker.min = new Date().toISOString().split("T")[0];
+        </script>
+        
         <button type="submit" class="btn btn-primary">Add Attendance</button>
     </form>
-</body>
-</html>
+    {% endblock %}
