@@ -187,6 +187,8 @@ def get_courts():
 
 @app.route('/courts/add', methods=['GET', 'POST'])
 def add_court():
+    if not session['user'] == 'Vinay':
+        return redirect(url_for('get_courts'))
     if 'user' not in session:
         flash('Please log in to access this page.', 'error')
         return redirect(url_for('login'))
@@ -294,7 +296,7 @@ def view_bookings():
 @app.route('/edit_booking/<int:booking_id>', methods=['GET', 'POST'])
 def edit_booking(booking_id):
     if not session['user'] == 'Vinay':
-        return redirect(url_for('view_attendance'))
+        return redirect(url_for('view_bookings'))
     booking = Booking.query.get_or_404(booking_id)
     form = AddBookingForm(obj=booking)
     if form.validate_on_submit():
