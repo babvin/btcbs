@@ -8,8 +8,15 @@
 </head>
 <body>
     <header>
+        <!-- Badminton icon -->
+        
         <div class="container">
-            <h1 class="logo">Badminton Booking</h1>
+            <div class="logo-container">
+             <!-- Logo image -->
+             <img src="{{ 'logo.png' }}" alt="Logo" class="logo">
+            
+        </div>
+            
             <nav>
                 <ul>
                     <li><a href="{{ url_for('index') }}">Home</a></li>
@@ -31,8 +38,10 @@
         {% block content %}{% endblock %}
     </div>
     <footer>
-        <div class="container">
+        <div class="container">                
             &copy; 2024 Badminton Booking. All rights reserved.
+            <!-- Badminton icon -->             
+            <img class="badminton-icon" src="{{ 'shuttlecock.png' }}" alt="Badminton Icon">        
         </div>
     </footer>
 </body>

@@ -1,25 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Attendance</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Edit Attendance{% endblock %}
+
+
+{% block content %}
     <h1>Edit Attendance</h1>
     <form method="post">
+        <table>
         {{ form.hidden_tag() }}
-        <div>
-            {{ form.user_id.label }}
-            {{ form.user_id(class="form-control") }}
-            {% for error in form.user_id.errors %}
+        <!--<div>
+            <tr><th>{{ form.user.label }}</th>
+            <td>{{ form.user(class="form-control") }}</td></tr>
+            {% for error in form.user.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
-        </div>
+        </div>-->
         <div>
-            {{ form.date.label }}
-            {{ form.date(class="form-control") }}
-            {% for error in form.date.errors %}
+            {{ form.attendance_date.label }}
+            {{ form.attendance_date(class="form-control") }}
+            {% for error in form.attendance_date.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
@@ -31,6 +30,6 @@
             {% endfor %}
         </div>
         <button type="submit" class="btn btn-primary">Update Attendance</button>
+    </table>
     </form>
-</body>
-</html>
+    {% endblock %}

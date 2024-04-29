@@ -10,7 +10,7 @@
     <h1>Setup Two-Factor Authentication</h1>
     <p>Hello, {{ user.name }}!</p>
     <p>To complete setting up two-factor authentication for your account, please scan the QR code below using the Google Authenticator app:</p>
-    <img src="{{ '/qr_codes/'+ user.mobile_number +'_qr.png' }}" alt="QR Code">
+    <img src="{{ '/qr_codes/'+ user.mobile_number +'_qr.png' }}" alt="QR Code" class="qr-code">
     <p>Please login, <a href="{{ url_for('.login') }}"> here</a>.</p>
     </form>
 </body>

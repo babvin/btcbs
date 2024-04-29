@@ -1,19 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Booking</title>
-  
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Add Attendance{% endblock %}
+
+
+{% block content %}
     <h1><center>Add Booking</center></h1>
     <form method="post">
+        <table>
         {{ form.hidden_tag() }}
         <div>
-            {{ form.court_id.label }}
-            {{ form.court_id(class="form-control") }}
+            <tr><th>{{ form.court_id.label }}</th>
+                <td>{{ form.court_id(class="form-control") }}</td></tr>
             {% for error in form.court_id.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
@@ -26,25 +23,25 @@
             {% endfor %}
         </div> -->
         <div>
-            {{ form.booking_date.label }}
-            {{ form.booking_date(class="form-control") }}
+            <tr><th>{{ form.booking_date.label }}</th>
+                <td>{{ form.booking_date(class="form-control") }}</td></tr>
             {% for error in form.booking_date.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
         
         <div>
-            {{ form.start_time.label }}
+            <tr><th>{{ form.start_time.label }}</th>
             {# Set default value to "09:00" and set minutes to 0 #}
-            {{ form.start_time(class="form-control", value="08:00", step="3600") }}
+            <td>{{ form.start_time(class="form-control", value="08:00", step="3600") }}</td></tr>
             {% for error in form.start_time.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
-            {{ form.end_time.label }}
+            <tr><th>{{ form.end_time.label }}</th>
             {# Set default value to "09:00" and set minutes to 0 #}
-            {{ form.end_time(class="form-control", value="09:00", step="3600") }}
+            <td>{{ form.end_time(class="form-control", value="09:00", step="3600") }}</td></tr>
             {% for error in form.end_time.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
@@ -70,7 +67,14 @@
                 this.value = this.value.replace(/:[^:]*$/, ":00");
             });
         </script>
-        <button type="submit" class="btn btn-primary">Add Booking</button>
+        <script>
+            // Get the input element by its ID
+            var datePicker = document.getElementById("attendance_date");
+        
+            // Set the minimum date to today
+            datePicker.min = new Date().toISOString().split("T")[0];
+        </script>
+        <tr><td colspan="2" align="center"><button type="submit" class="btn btn-primary">Add Booking</button></td></tr>
+    </table>
     </form>
-</body>
-</html>
+    {% endblock %}

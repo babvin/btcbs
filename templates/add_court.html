@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Add Court</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Add Court{% endblock %}
+
+
+{% block content %}
     <h1>Add Court</h1>
     <form method="post">
         {{ form.hidden_tag() }}
@@ -13,6 +11,6 @@
         <p>{{ form.cost_per_hour.label }} {{ form.cost_per_hour }}</p>
         <p>{{ form.submit }}</p>
     </form>
-</body>
-</html>
+    {% endblock %}
+
 

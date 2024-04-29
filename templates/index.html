@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
-{% block title %}Home - Badminton Booking{% endblock %}
+{% block title %}Home - Begur Buddies {% endblock %}
 
 {% block content %}
-    <h2>Welcome to Badminton Booking</h2>
-    <p>Book your badminton courts with ease!</p>
+    <h2>Welcome to Begur Buddies App </h2>
+    <img src="{{ 'bb.png' }}" alt="Begur Buddies" >
+    {% if not 'user' in session %}    
+    <h3>To put attendance or book the court, please <a href="{{ url_for('login') }}">Login</a>.</h3>
+    <h3>If you are seeing this for the first time, you are welcome and please <a href="{{ url_for('register') }}">Register</a>.</h3>
+    {% endif %}
 {% endblock %}

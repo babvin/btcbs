@@ -1,13 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <h1>Register</h1>
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+
+{% block content %}
+    <h1><center>Register</center></h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -19,23 +16,24 @@
     {% endwith %}
     <form method="post">
         {{ form.hidden_tag() }}
+        <table>
         <div>
-            {{ form.name.label }}
-            {{ form.name(class="form-control") }}
+            
+            <tr><th>{{ form.name.label }}</th>
+            <td>{{ form.name(class="form-control") }}</td></tr>
             {% for error in form.name.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
-            {{ form.mobile_number.label }}
-            {{ form.mobile_number(class="form-control") }}
+            <tr><th>{{ form.mobile_number.label }}</th>
+                <td>{{ form.mobile_number(class="form-control") }}</td></tr>
             {% for error in form.mobile_number.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
-       
-        
-        <button type="submit" class="btn btn-primary">Register</button>
+        <tr><td colspan="2" align="center"><button type="submit" class="btn btn-primary">Register</button></td></tr>
+    </table>    
     </form>
-</body>
-</html>
+
+    {% endblock %}

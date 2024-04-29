@@ -18,7 +18,7 @@
         <tbody>
             {% for record in attendance %}
             <tr>
-                <td>{{ record.id }}</td>
+                <td><a href="{{ url_for('edit_attendance', attendance_id=record.id) }}">{{ record.id }}</a></td>
                 <td>{{ record.user }}</td>
                 <td>{{ record.attendance_date }}</td>
                 <td>{{ record.status }}</td>

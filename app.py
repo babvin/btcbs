@@ -15,7 +15,7 @@ from sqlalchemy import create_engine, UniqueConstraint
 from sqlalchemy_utils import database_exists, create_database, UUIDType
 from wtforms_alchemy import PhoneNumberField
 from dotenv import load_dotenv
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 import logging
 
 # Configure logging
@@ -102,7 +102,7 @@ class AddAttendanceForm(FlaskForm):
 
 @app.route('/')
 def home():
-    return 'Hello, guest! <a href="/logout">Login</a>'
+    return redirect(url_for('index'))
 
 @app.route('/index')
 def index():
@@ -179,11 +179,17 @@ def login():
 # CRUD APIs for Courts
 @app.route('/courts', methods=['GET'])
 def get_courts():
+    if 'user' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
     court = Court.query.all()
     return render_template('courts.html', court=court)
 
 @app.route('/courts/add', methods=['GET', 'POST'])
 def add_court():
+    if 'user' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
     form = CourtForm()
     if form.validate_on_submit():
         court = Court(name=form.name.data, cost_per_hour=form.cost_per_hour.data)
@@ -224,6 +230,9 @@ def logout():
 # Route to display session variables (for testing)
 @app.route('/session')
 def show_session():
+    if 'user' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
     session_dict = dict(session)
     return jsonify(session_dict)
 
@@ -266,23 +275,49 @@ def add_booking():
 # READ: View bookings route
 @app.route('/view_bookings')
 def view_bookings():
-    booking = Booking.query.all()
+    if 'user' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
+    # Get the current date and the first day of the next month
+    current_date = datetime.now()
+    first_day_next_month = datetime(current_date.year, current_date.month + 1, 1)
+    # Calculate the last day of the next month
+    last_day_next_month = first_day_next_month.replace(day=28) + timedelta(days=4)
+    #booking = Booking.query.all()
+    booking = Booking.query.filter(
+        (Booking.booking_date >= current_date) &
+        (Booking.booking_date < last_day_next_month)
+    ).order_by(Booking.booking_date.desc()).all()
     return render_template('view_bookings.html', booking=booking)
 
 # UPDATE: Edit booking route
 @app.route('/edit_booking/<int:booking_id>', methods=['GET', 'POST'])
 def edit_booking(booking_id):
+    if not session['user'] == 'Vinay':
+        return redirect(url_for('view_attendance'))
     booking = Booking.query.get_or_404(booking_id)
     form = AddBookingForm(obj=booking)
     if form.validate_on_submit():
         form.populate_obj(booking)
-        db.session.commit()
-        return redirect(url_for('booking_success'))
-    return render_template('edit_booking.html', form=form, booking_id=booking_id)
+        try:
+            db.session.commit()
+            flash('Booking updated successfully!', 'success')
+        except IntegrityError:
+            db.session.rollback()
+            flash('Duplicate booking detected! Please choose a different time slot.', 'error')
+        redirect_url = url_for('view_bookings')        
+        return render_template('redirect.html', redirect_url=redirect_url)        
+    else:
+        return render_template('edit_booking.html', form=form, booking_id=booking_id)
 
 # DELETE: Delete booking route
 @app.route('/delete_booking/<int:booking_id>', methods=['POST'])
 def delete_booking(booking_id):
+    if 'user' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
+    if not session['user'] == 'Vinay':
+        return redirect(url_for('view_attendance'))
     booking = Booking.query.get_or_404(booking_id)
     db.session.delete(booking)
     db.session.commit()
@@ -318,23 +353,55 @@ def add_attendance():
 # READ: View attendance route
 @app.route('/view_attendance')
 def view_attendance():
-    attendance = Attendance.query.all()
+    if 'user' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
+    # Get the current date and the first day of the next month
+    current_date = datetime.now()
+    first_day_next_month = datetime(current_date.year, current_date.month + 1, 1)
+    # Calculate the last day of the next month
+    last_day_next_month = first_day_next_month.replace(day=28) + timedelta(days=4)
+    #attendance = Attendance.query.all()
+    # Retrieve all records from the Attendance table sorted by attendance_date in descending order
+    #attendance = Attendance.query.order_by(Attendance.attendance_date.desc()).all()
+    # Retrieve rows for current and next month in descending order of attendance_date
+    attendance = Attendance.query.filter(
+        (Attendance.attendance_date >= current_date) &
+        (Attendance.attendance_date < last_day_next_month)
+    ).order_by(Attendance.attendance_date.desc()).all()
     return render_template('view_attendance.html', attendance=attendance)
 
 # UPDATE: Edit attendance route
 @app.route('/edit_attendance/<int:attendance_id>', methods=['GET', 'POST'])
 def edit_attendance(attendance_id):
+    if 'user' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
+    if not session['user'] == 'Vinay':
+        return redirect(url_for('view_attendance'))
     attendance = Attendance.query.get_or_404(attendance_id)
     form = AddAttendanceForm(obj=attendance)
     if form.validate_on_submit():
         form.populate_obj(attendance)
-        db.session.commit()
-        return redirect(url_for('attendance_success'))
-    return render_template('edit_attendance.html', form=form, attendance_id=attendance_id)
+        try:
+            db.session.commit()
+            flash('Attendance updated successfully!', 'success')
+        except:
+            db.session.rollback()
+            flash('Duplicate attendance detected! Please choose a different day.', 'error')
+        redirect_url = url_for('view_attendance')    
+        return render_template('redirect.html', redirect_url=redirect_url)
+    else:
+        return render_template('edit_attendance.html', form=form, attendance_id=attendance_id)
 
 # DELETE: Delete attendance route
 @app.route('/delete_attendance/<int:attendance_id>', methods=['POST'])
 def delete_attendance(attendance_id):
+    if 'user' not in session:
+        flash('Please log in to access this page.', 'error')
+        return redirect(url_for('login'))
+    if not session['user'] == 'Vinay':
+        return redirect(url_for('view_attendance'))
     attendance = Attendance.query.get_or_404(attendance_id)
     db.session.delete(attendance)
     db.session.commit()

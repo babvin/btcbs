@@ -1,50 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Booking</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Edit Attendance{% endblock %}
+
+
+{% block content %}
     <h1>Edit Booking</h1>
     <form method="post">
+        <table>
         {{ form.hidden_tag() }}
         <div>
-            {{ form.court_id.label }}
-            {{ form.court_id(class="form-control") }}
+            <tr><th>{{ form.court_id.label }}</th>
+                <td>{{ form.court_id(class="form-control") }}</td></tr>
             {% for error in form.court_id.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
-        <div>
+        <!--<div>
             {{ form.user.label }}
             {{ form.user(class="form-control") }}
             {% for error in form.user.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
-        </div>
+        </div> -->
         <div>
-            {{ form.date.label }}
-            {{ form.date(class="form-control") }}
-            {% for error in form.date.errors %}
+            <tr><th>{{ form.booking_date.label }}</th>
+            <td>{{ form.booking_date(class="form-control") }}</td></tr>
+            {% for error in form.booking_date.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
-            {{ form.start_time.label }}
-            {{ form.start_time(class="form-control") }}
+            <tr><th>{{ form.start_time.label }}</th>
+                <td>{{ form.start_time(class="form-control") }}</td></tr>
             {% for error in form.start_time.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
         <div>
-            {{ form.end_time.label }}
-            {{ form.end_time(class="form-control") }}
+            <tr><th>{{ form.end_time.label }}</th>
+                <td>{{ form.end_time(class="form-control") }}</td></tr>
             {% for error in form.end_time.errors %}
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
-        <button type="submit" class="btn btn-primary">Update Booking</button>
+        <tr><td colspan="2", align="center"><button type="submit" class="btn btn-primary">Update Booking</button></td></tr>
+    </table>
     </form>
-</body>
-</html>
+    {% endblock %}

@@ -30,7 +30,7 @@
                 <span class="text-danger">{{ error }}</span>
             {% endfor %}
         </div>
-    </table>
+    
         <script>
             // Get the input element by its ID
             var datePicker = document.getElementById("attendance_date");
@@ -39,6 +39,7 @@
             datePicker.min = new Date().toISOString().split("T")[0];
         </script>
         
-        <button type="submit" class="btn btn-primary">Add Attendance</button>
+        <tr><td colspan="2" align="center"><button type="submit" class="btn btn-primary">Add Attendance</button></td></tr>
+    </table>
     </form>
     {% endblock %}
